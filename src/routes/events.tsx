@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { styles, eventTypes } from "@/lib/styles-data";
 import { supabase } from "@/integrations/supabase/client";
-import { Crown, CheckCircle2 } from "lucide-react";
+import { Crown, CheckCircle2, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/events")({
   head: () => ({
@@ -44,7 +44,10 @@ const schema = z.object({
   services: z.array(z.string()).min(1, "Pick at least one styling"),
   location: z.string().max(200).optional(),
   notes: z.string().max(1000).optional(),
-});
+}).refine(
+  (d) => !d.services.includes("custom") || (d.notes && d.notes.trim().length >= 5),
+  { message: "Please describe your custom style in the notes", path: ["notes"] },
+);
 
 function EventsPage() {
   const navigate = useNavigate();
@@ -62,6 +65,7 @@ function EventsPage() {
     services: [] as string[],
     location: "",
     notes: "",
+    custom_style: "",
   });
 
   const toggleService = (id: string) =>
@@ -74,7 +78,13 @@ function EventsPage() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const parsed = schema.safeParse(form);
+    const customDetail = form.custom_style.trim();
+    const combinedNotes =
+      form.services.includes("custom") && customDetail
+        ? `${form.notes ? form.notes + "\n\n" : ""}Custom style request: ${customDetail}`.slice(0, 1000)
+        : form.notes;
+
+    const parsed = schema.safeParse({ ...form, notes: combinedNotes });
     if (!parsed.success) {
       toast.error(parsed.error.issues[0].message);
       return;
@@ -227,7 +237,46 @@ function EventsPage() {
                       </label>
                     );
                   })}
+                  {(() => {
+                    const checked = form.services.includes("custom");
+                    return (
+                      <label
+                        className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition sm:col-span-2 ${
+                          checked
+                            ? "border-gold bg-gold/10"
+                            : "border-border/60 hover:border-gold/50"
+                        }`}
+                      >
+                        <Checkbox checked={checked} onCheckedChange={() => toggleService("custom")} />
+                        <div className="grid h-12 w-12 shrink-0 place-items-center rounded-md bg-gradient-glam">
+                          <Sparkles className="h-5 w-5 text-primary-foreground" />
+                        </div>
+                        <div>
+                          <div className="font-display text-base leading-tight">Custom Styles</div>
+                          <div className="text-xs text-muted-foreground">
+                            Bespoke looks — quoted on request
+                          </div>
+                        </div>
+                      </label>
+                    );
+                  })()}
                 </div>
+
+                {form.services.includes("custom") && (
+                  <div className="mt-4">
+                    <Label className="text-xs uppercase tracking-widest text-muted-foreground">
+                      Describe your custom style <span className="text-pink">*</span>
+                    </Label>
+                    <Textarea
+                      rows={3}
+                      value={form.custom_style}
+                      onChange={(e) => setForm({ ...form, custom_style: e.target.value })}
+                      maxLength={500}
+                      placeholder="Color, length, inspiration, accessories, anything we should know..."
+                      className="mt-2"
+                    />
+                  </div>
+                )}
               </div>
 
               <Field label="Tell us about your event" className="sm:col-span-2">
