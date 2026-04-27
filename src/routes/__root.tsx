@@ -39,11 +39,16 @@ export const Route = createRootRoute({
           "Luxury hair styling in Jonesboro, GA. Braids, box braids, silk press, waves, and locs. Book your appointment or event glam team at Rooted Beauty.",
       },
       { name: "author", content: "Rooted Beauty" },
-      { property: "og:title", content: "Rooted Beauty — Luxury Hair Salon" },
-      { property: "og:description", content: "Luxury braids, box braids, silk press, waves and locs. Jonesboro, GA." },
+      { property: "og:title", content: "Rooted Beauty — Luxury Hair Salon · Jonesboro, GA" },
+      { property: "og:description", content: "Glam Hair Studio is a luxury salon website for booking hair services and events." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Rooted Beauty — Luxury Hair Salon · Jonesboro, GA" },
+      { name: "description", content: "Glam Hair Studio is a luxury salon website for booking hair services and events." },
+      { name: "twitter:description", content: "Glam Hair Studio is a luxury salon website for booking hair services and events." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/fa9a315c-8835-414c-87ea-3f010a970354/id-preview-b5027769--9149a680-70a1-48ac-bde9-b39af702d4e4.lovable.app-1777303106265.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/fa9a315c-8835-414c-87ea-3f010a970354/id-preview-b5027769--9149a680-70a1-48ac-bde9-b39af702d4e4.lovable.app-1777303106265.png" },
     ],
     links: [
       {
