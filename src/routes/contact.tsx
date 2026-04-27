@@ -8,7 +8,7 @@ export const Route = createFileRoute("/contact")({
       { title: "Visit & Contact — Rooted Beauty · Jonesboro, GA" },
       {
         name: "description",
-        content: "Visit Rooted Beauty at 247 Main Street, Jonesboro, GA. Call (470) 555-0142 or follow us on social.",
+         content: "Visit Rooted Beauty at 247 Main Street, Jonesboro, GA. Call (470) 698-4059 or follow us on social.",
       },
       { property: "og:title", content: "Visit Rooted Beauty" },
       { property: "og:description", content: "Find us in Jonesboro, GA. Hours, contact info, and socials." },
@@ -38,7 +38,7 @@ function ContactPage() {
               247 Main Street, Suite 4<br />
               Jonesboro, GA 30236
             </Card>
-            <Card icon={Phone} label="Phone" href="tel:+14705550142">(470) 555-0142</Card>
+             <Card icon={Phone} label="Phone" href="tel:+14706984059">(470) 698-4059</Card>
             <Card icon={Mail} label="Email" href="mailto:hello@rootedbeauty.co">hello@rootedbeauty.co</Card>
 
             <div className="rounded-2xl border border-gold/30 bg-card/40 p-6">

@@ -51,10 +51,10 @@ export function SiteFooter() {
                 <MapPin className="mt-0.5 h-4 w-4 text-gold" />
                 <span>247 Main Street, Suite 4<br />Jonesboro, GA 30236</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-gold" />
-                <span>(470) 555-0142</span>
-              </li>
+               <li className="flex items-center gap-2">
+                 <Phone className="h-4 w-4 text-gold" />
+                 <span>(470) 698-4059</span>
+               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-gold" />
                 <span>hello@rootedbeauty.co</span>
