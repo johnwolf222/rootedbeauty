@@ -39,7 +39,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden md:block">
-          <Button asChild variant="glam" size="lg">
+          <Button asChild variant="glam" size="sm">
             <Link to="/booking">Book Now</Link>
           </Button>
         </div>
