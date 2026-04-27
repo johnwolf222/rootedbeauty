@@ -14,7 +14,93 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+          notes: string | null
+          phone: string
+          preferred_date: string
+          preferred_time: string
+          service: string
+          status: string
+          style: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          notes?: string | null
+          phone: string
+          preferred_date: string
+          preferred_time: string
+          service: string
+          status?: string
+          style?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string
+          preferred_date?: string
+          preferred_time?: string
+          service?: string
+          status?: string
+          style?: string | null
+        }
+        Relationships: []
+      }
+      event_bookings: {
+        Row: {
+          created_at: string
+          email: string
+          event_date: string
+          event_type: string
+          guest_count: number
+          id: string
+          location: string | null
+          name: string
+          notes: string | null
+          phone: string
+          services: string[]
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          event_date: string
+          event_type: string
+          guest_count?: number
+          id?: string
+          location?: string | null
+          name: string
+          notes?: string | null
+          phone: string
+          services?: string[]
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          event_date?: string
+          event_type?: string
+          guest_count?: number
+          id?: string
+          location?: string | null
+          name?: string
+          notes?: string | null
+          phone?: string
+          services?: string[]
+          status?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
