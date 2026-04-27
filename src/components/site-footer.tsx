@@ -44,9 +44,9 @@ export function SiteFooter() {
             </div>
           </div>
 
-          <div>
-            <h4 className="text-xs uppercase tracking-[0.3em] text-gold">Visit</h4>
-            <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
+           <div>
+             <h4 className="text-xs uppercase tracking-[0.3em] text-gold font-bold">VISIT</h4>
+             <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
               <li className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 text-gold" />
                 <span>247 Main Street, Suite 4<br />Jonesboro, GA 30236</span>
@@ -62,26 +62,26 @@ export function SiteFooter() {
             </ul>
           </div>
 
-          <div>
-            <h4 className="text-xs uppercase tracking-[0.3em] text-gold">Hours</h4>
-            <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+           <div>
+             <h4 className="text-xs uppercase tracking-[0.3em] text-gold font-bold">HOURS</h4>
+             <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
               <li className="flex justify-between"><span>Tue – Fri</span><span>9am – 8pm</span></li>
               <li className="flex justify-between"><span>Saturday</span><span>8am – 7pm</span></li>
               <li className="flex justify-between"><span>Sunday</span><span>10am – 5pm</span></li>
               <li className="flex justify-between text-pink"><span>Monday</span><span>Closed</span></li>
             </ul>
-            <Link
-              to="/booking"
-              className="mt-6 inline-block text-sm uppercase tracking-widest text-gold underline underline-offset-4 hover:opacity-80"
-            >
-              Reserve your seat →
-            </Link>
+             <Link
+               to="/booking"
+               className="mt-6 inline-block text-sm uppercase tracking-widest text-gold underline underline-offset-4 hover:opacity-80 font-bold"
+             >
+               RESERVE YOUR SEAT →
+             </Link>
           </div>
         </div>
 
-        <div className="mt-14 border-t border-border/40 pt-6 text-center text-xs uppercase tracking-widest text-muted-foreground">
-          © {new Date().getFullYear()} Rooted Beauty · Jonesboro, GA · Crafted with love
-        </div>
+         <div className="mt-14 border-t border-border/40 pt-6 text-center text-xs uppercase tracking-widest text-muted-foreground">
+           © {new Date().getFullYear()} ROOTED BEAUTY · DESIGNED BY JOHN WOLF
+         </div>
       </div>
     </footer>
   );
