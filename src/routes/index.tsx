@@ -16,7 +16,7 @@ export const Route = createFileRoute("/")({
           "Where every crown is created with intention. Luxury braids, silk press, waves and locs in Jonesboro, GA. Reserve your seat at Rooted Beauty.",
       },
       { property: "og:title", content: "Rooted Beauty — Luxury Hair Salon" },
-      { property: "og:description", content: "Luxury hair styling in Jonesboro, GA." },
+      { property: "og:description", content: "Luxury hair styling in Jonesboro / Ellenwood, GA." },
     ],
   }),
   component: Index,
@@ -31,7 +31,7 @@ function Index() {
         <div className="container mx-auto grid items-center gap-12 px-6 py-20 lg:grid-cols-2 lg:gap-16 lg:py-28">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 px-4 py-1.5 text-xs uppercase tracking-[0.3em] text-gold">
-              <Sparkles className="h-3 w-3" /> Jonesboro · GA
+              <Sparkles className="h-3 w-3" /> Jonesboro / Ellenwood · GA
             </div>
             <h1 className="mt-6 font-display text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">
               Where every <span className="text-gradient-glam">crown</span> is created with intention.
@@ -43,12 +43,12 @@ function Index() {
             <div className="mt-10 flex flex-wrap gap-4">
               <Button asChild variant="glam" size="xl">
                 <Link to="/booking">
-                  <Calendar /> Book an Appointment
+                  <Calendar /> Book Your Experience
                 </Link>
               </Button>
               <Button asChild variant="luxe" size="xl">
-                <Link to="/events">
-                  Plan an Event <ArrowRight />
+                <Link to="/services">
+                  View Services <ArrowRight />
                 </Link>
               </Button>
             </div>
