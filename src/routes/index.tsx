@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Crown, Calendar, ArrowRight, Star } from "lucide-react";
+import { CalendarCheck, TrendingUp, Target } from "lucide-react";
 import heroImg from "@/assets/hero.jpg";
 import { styles } from "@/lib/styles-data";
 
