@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Crown, Calendar, ArrowRight, Star, MapPin, Phone, Mail, Quote } from "lucide-react";
 import { CalendarCheck, TrendingUp, Target } from "lucide-react";
@@ -50,6 +51,31 @@ const testimonials = [
 ];
 
 function Index() {
+  const heroImgRef = useRef<HTMLImageElement>(null);
+  const [offset, setOffset] = useState(0);
+
+  useEffect(() => {
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) return;
+
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const el = heroImgRef.current;
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+        // Parallax: image moves at ~40% of scroll speed
+        setOffset(window.scrollY * 0.3);
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <>
       {/* Hero */}
@@ -96,11 +122,13 @@ function Index() {
             <div className="absolute -inset-6 -z-10 rounded-[2rem] bg-gradient-glam opacity-40 blur-3xl" />
             <div className="overflow-hidden rounded-[1.5rem] border border-gold/30 shadow-luxe">
               <img
+                ref={heroImgRef}
                 src={heroImg}
                 alt="Glamorous editorial portrait of a woman with luxe styled hair"
                 width={1080}
                 height={1920}
-                className="h-[600px] w-full object-cover"
+                className="h-[600px] w-full object-cover will-change-transform"
+                style={{ transform: `translate3d(0, ${offset}px, 0) scale(1.15)` }}
               />
             </div>
             <div className="absolute -bottom-6 -left-6 hidden rounded-2xl border border-gold/40 bg-card/90 p-5 backdrop-blur-md sm:block">
