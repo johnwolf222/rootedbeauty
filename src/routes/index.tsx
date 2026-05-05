@@ -263,6 +263,114 @@ function Index() {
           </div>
         </div>
       </section>
+
+      {/* Testimonials */}
+      <section className="relative overflow-hidden py-24">
+        <div className="absolute inset-0 -z-10 bg-gradient-noir" />
+        <div className="container mx-auto px-6">
+          <div className="max-w-2xl">
+            <p className="text-xs uppercase tracking-[0.3em] text-gold">Testimonials</p>
+            <h2 className="mt-3 font-display text-4xl sm:text-5xl">
+              Real <span className="text-gradient-glam">Crowns</span>, Real Stories
+            </h2>
+            <p className="mt-6 text-muted-foreground">
+              Don't just take our word for it. Here's what our clients say about their
+              Rooted Beauty experience.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+            {testimonials.map((t, i) => (
+              <div
+                key={t.name}
+                className="group rounded-2xl border border-gold/30 bg-card/40 p-8 shadow-luxe transition-all duration-500 hover:scale-[1.02] hover:border-gold/60 hover:shadow-gold animate-fade-in"
+                style={{ animationDelay: `${i * 0.12}s` }}
+              >
+                <Quote className="h-8 w-8 text-gold/70" />
+                <div className="mt-4 flex items-center gap-1 text-gold">
+                  {Array.from({ length: 5 }).map((_, s) => (
+                    <Star key={s} className="h-4 w-4 fill-current" />
+                  ))}
+                </div>
+                <p className="mt-5 text-lg leading-relaxed text-foreground/90">
+                  "{t.quote}"
+                </p>
+                <div className="mt-6 border-t border-border/40 pt-4">
+                  <p className="font-display text-lg">{t.name}</p>
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">{t.location}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-12 text-center">
+            <a
+              href="https://www.google.com/search?q=Rooted+Beauty+Jonesboro+GA+reviews"
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm uppercase tracking-widest text-gold hover:opacity-80"
+            >
+              See All Reviews →
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Find Us / Location */}
+      <section className="border-y border-border/40 bg-card/30 py-24">
+        <div className="container mx-auto px-6">
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-gold">Find Us</p>
+              <h2 className="mt-3 font-display text-4xl sm:text-5xl">
+                Visit Our <span className="text-gradient-gold">Studio</span>
+              </h2>
+              <div className="mt-8 space-y-4 text-muted-foreground">
+                <div className="flex items-start gap-3">
+                  <MapPin className="mt-1 h-5 w-5 shrink-0 text-gold" />
+                  <div>
+                    <p className="text-foreground font-display text-xl">Rooted Beauty</p>
+                    <p>Jonesboro / Ellenwood, GA</p>
+                    <p className="text-sm">Serving South Atlanta, Stockbridge, Morrow & surrounding areas.</p>
+                    <p className="mt-3 text-xs italic">
+                      Exact address provided after booking confirmation for client privacy.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Phone className="h-5 w-5 text-gold" />
+                  <a href="tel:+14706984059" className="text-foreground hover:text-gold">(470) 698-4059</a>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Mail className="h-5 w-5 text-gold" />
+                  <a href="mailto:hello@rootedbeauty.lovable.app" className="text-foreground hover:text-gold">hello@rootedbeauty.lovable.app</a>
+                </div>
+              </div>
+              <div className="mt-8">
+                <Button asChild variant="glam" size="xl">
+                  <Link to="/booking"><Calendar /> Book Now</Link>
+                </Button>
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-2xl border border-gold/30 shadow-luxe">
+              <iframe
+                title="Rooted Beauty location — Jonesboro / Ellenwood, GA"
+                src="https://www.google.com/maps?q=Jonesboro,GA&output=embed"
+                width="100%"
+                height="420"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="h-[420px] w-full border-0"
+              />
+            </div>
+          </div>
+
+          <p className="mt-12 text-center text-sm uppercase tracking-widest text-muted-foreground">
+            Intentionally growing toward 70–85 appointments per month — book early for best availability.
+          </p>
+        </div>
+      </section>
     </>
   );
 }
