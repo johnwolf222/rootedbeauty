@@ -136,7 +136,7 @@ function Index() {
               <Link
                 key={style.id}
                 to="/services"
-                className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card transition-all hover:border-gold/50 hover:shadow-glam"
+                className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card transition-all duration-500 hover:scale-[1.03] hover:border-gold/60 hover:shadow-gold animate-fade-in"
               >
                 <div className="aspect-[4/5] overflow-hidden">
                   <img
