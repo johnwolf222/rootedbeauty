@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Crown, Calendar, ArrowRight, Star } from "lucide-react";
+import { Sparkles, Crown, Calendar, ArrowRight, Star, MapPin, Phone, Mail, Quote } from "lucide-react";
 import { CalendarCheck, TrendingUp, Target } from "lucide-react";
 import heroImg from "@/assets/hero.jpg";
 import { styles } from "@/lib/styles-data";
@@ -9,18 +9,45 @@ import { styles } from "@/lib/styles-data";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Rooted Beauty — Luxury Hair Salon · Jonesboro, GA" },
+      { title: "Rooted Beauty | Luxury Braids & Silk Press in Jonesboro / Ellenwood, GA" },
       {
         name: "description",
         content:
-          "Where every crown is created with intention. Luxury braids, silk press, waves and locs in Jonesboro, GA. Reserve your seat at Rooted Beauty.",
+          "Luxury protective styles, knotless braids, silk press, Hollywood waves & loc artistry in Jonesboro / Ellenwood, GA. 500+ five-star reviews. Book your experience.",
       },
-      { property: "og:title", content: "Rooted Beauty — Luxury Hair Salon" },
-      { property: "og:description", content: "Luxury hair styling in Jonesboro / Ellenwood, GA." },
+      { property: "og:title", content: "Rooted Beauty — Luxury Protective Styles & Silk Press" },
+      { property: "og:description", content: "Where every crown is created with intention. Jonesboro / Ellenwood, GA." },
     ],
   }),
   component: Index,
 });
+
+const testimonials = [
+  {
+    quote:
+      "My silk press lasted 3 weeks with zero frizz — even in Atlanta humidity. The attention to hair health is unmatched.",
+    name: "Jasmine T.",
+    location: "Ellenwood",
+  },
+  {
+    quote:
+      "Goddess Braids that felt weightless and looked expensive. Best braiding experience I've ever had.",
+    name: "Aisha R.",
+    location: "Jonesboro",
+  },
+  {
+    quote:
+      "Booked a bridal party of 5 and they handled everything flawlessly. We felt like royalty.",
+    name: "Morgan K.",
+    location: "Stockbridge",
+  },
+  {
+    quote:
+      "Finally found a stylist who actually listens and protects my edges. 10/10.",
+    name: "Brianna M.",
+    location: "Atlanta",
+  },
+];
 
 function Index() {
   return (
