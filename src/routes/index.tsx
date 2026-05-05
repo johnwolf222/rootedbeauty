@@ -60,12 +60,15 @@ function Index() {
             <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 px-4 py-1.5 text-xs uppercase tracking-[0.3em] text-gold">
               <Sparkles className="h-3 w-3" /> Jonesboro / Ellenwood · GA
             </div>
-            <h1 className="mt-6 font-display text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">
-              Where every <span className="text-gradient-glam">crown</span> is created with intention.
+            <h1 className="mt-6 font-display text-5xl leading-[1.05] sm:text-6xl lg:text-7xl animate-fade-in">
+              Rooted Beauty — <span className="text-gradient-glam">Luxury Protective Styles</span> & Silk Press
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              Luxury braids, silk press, Hollywood waves, and loc artistry —
-              styled by a team obsessed with healthy hair and high glam.
+            <p className="mt-6 max-w-xl text-xl leading-relaxed text-foreground/90">
+              Jonesboro / Ellenwood, GA · Where every crown is created with intention.
+            </p>
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
+              Luxury braids, knotless, silk press, Hollywood waves & loc artistry by master
+              stylists with 15+ years experience. 500+ five-star reviews.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Button asChild variant="glam" size="xl">
