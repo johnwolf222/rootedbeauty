@@ -225,7 +225,7 @@ function Index() {
               >
                 <Icon className="h-6 w-6 text-gold" />
                 <p className="mt-4 text-xs uppercase tracking-[0.3em] text-muted-foreground">{label}</p>
-                <div className="mt-4 font-display text-5xl text-gradient-glam">{value}</div>
+                <div className="mt-4 font-display text-6xl sm:text-7xl text-gradient-glam">{value}</div>
                 <p className="mt-2 text-sm text-muted-foreground">{suffix}</p>
               </div>
             ))}
