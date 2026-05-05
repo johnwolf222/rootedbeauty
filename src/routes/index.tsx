@@ -67,8 +67,10 @@ function Index() {
         if (!el) return;
         const rect = el.getBoundingClientRect();
         if (rect.bottom < 0 || rect.top > window.innerHeight) return;
-        // Parallax: image moves at ~40% of scroll speed
-        setOffset(window.scrollY * 0.3);
+        // Parallax: gentler on mobile for smoother feel, more pronounced on desktop
+        const isMobile = window.innerWidth < 768;
+        const speed = isMobile ? 0.15 : 0.3;
+        setOffset(window.scrollY * speed);
       });
     };
     onScroll();
