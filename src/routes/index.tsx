@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Crown, Calendar, ArrowRight, Star } from "lucide-react";
+import { Sparkles, Crown, Calendar, ArrowRight, Star, MapPin, Phone, Mail, Quote } from "lucide-react";
 import { CalendarCheck, TrendingUp, Target } from "lucide-react";
 import heroImg from "@/assets/hero.jpg";
 import { styles } from "@/lib/styles-data";
@@ -9,18 +9,45 @@ import { styles } from "@/lib/styles-data";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Rooted Beauty — Luxury Hair Salon · Jonesboro, GA" },
+      { title: "Rooted Beauty | Luxury Braids & Silk Press in Jonesboro / Ellenwood, GA" },
       {
         name: "description",
         content:
-          "Where every crown is created with intention. Luxury braids, silk press, waves and locs in Jonesboro, GA. Reserve your seat at Rooted Beauty.",
+          "Luxury protective styles, knotless braids, silk press, Hollywood waves & loc artistry in Jonesboro / Ellenwood, GA. 500+ five-star reviews. Book your experience.",
       },
-      { property: "og:title", content: "Rooted Beauty — Luxury Hair Salon" },
-      { property: "og:description", content: "Luxury hair styling in Jonesboro / Ellenwood, GA." },
+      { property: "og:title", content: "Rooted Beauty — Luxury Protective Styles & Silk Press" },
+      { property: "og:description", content: "Where every crown is created with intention. Jonesboro / Ellenwood, GA." },
     ],
   }),
   component: Index,
 });
+
+const testimonials = [
+  {
+    quote:
+      "My silk press lasted 3 weeks with zero frizz — even in Atlanta humidity. The attention to hair health is unmatched.",
+    name: "Jasmine T.",
+    location: "Ellenwood",
+  },
+  {
+    quote:
+      "Goddess Braids that felt weightless and looked expensive. Best braiding experience I've ever had.",
+    name: "Aisha R.",
+    location: "Jonesboro",
+  },
+  {
+    quote:
+      "Booked a bridal party of 5 and they handled everything flawlessly. We felt like royalty.",
+    name: "Morgan K.",
+    location: "Stockbridge",
+  },
+  {
+    quote:
+      "Finally found a stylist who actually listens and protects my edges. 10/10.",
+    name: "Brianna M.",
+    location: "Atlanta",
+  },
+];
 
 function Index() {
   return (
@@ -33,12 +60,15 @@ function Index() {
             <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 px-4 py-1.5 text-xs uppercase tracking-[0.3em] text-gold">
               <Sparkles className="h-3 w-3" /> Jonesboro / Ellenwood · GA
             </div>
-            <h1 className="mt-6 font-display text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">
-              Where every <span className="text-gradient-glam">crown</span> is created with intention.
+            <h1 className="mt-6 font-display text-5xl leading-[1.05] sm:text-6xl lg:text-7xl animate-fade-in">
+              Rooted Beauty — <span className="text-gradient-glam">Luxury Protective Styles</span> & Silk Press
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              Luxury braids, silk press, Hollywood waves, and loc artistry —
-              styled by a team obsessed with healthy hair and high glam.
+            <p className="mt-6 max-w-xl text-xl leading-relaxed text-foreground/90">
+              Jonesboro / Ellenwood, GA · Where every crown is created with intention.
+            </p>
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
+              Luxury braids, knotless, silk press, Hollywood waves & loc artistry by master
+              stylists with 15+ years experience. 500+ five-star reviews.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Button asChild variant="glam" size="xl">
@@ -106,7 +136,7 @@ function Index() {
               <Link
                 key={style.id}
                 to="/services"
-                className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card transition-all hover:border-gold/50 hover:shadow-glam"
+                className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card transition-all duration-500 hover:scale-[1.03] hover:border-gold/60 hover:shadow-gold animate-fade-in"
               >
                 <div className="aspect-[4/5] overflow-hidden">
                   <img
@@ -195,7 +225,7 @@ function Index() {
               >
                 <Icon className="h-6 w-6 text-gold" />
                 <p className="mt-4 text-xs uppercase tracking-[0.3em] text-muted-foreground">{label}</p>
-                <div className="mt-4 font-display text-5xl text-gradient-glam">{value}</div>
+                <div className="mt-4 font-display text-6xl sm:text-7xl text-gradient-glam">{value}</div>
                 <p className="mt-2 text-sm text-muted-foreground">{suffix}</p>
               </div>
             ))}
@@ -231,6 +261,114 @@ function Index() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="relative overflow-hidden py-24">
+        <div className="absolute inset-0 -z-10 bg-gradient-noir" />
+        <div className="container mx-auto px-6">
+          <div className="max-w-2xl">
+            <p className="text-xs uppercase tracking-[0.3em] text-gold">Testimonials</p>
+            <h2 className="mt-3 font-display text-4xl sm:text-5xl">
+              Real <span className="text-gradient-glam">Crowns</span>, Real Stories
+            </h2>
+            <p className="mt-6 text-muted-foreground">
+              Don't just take our word for it. Here's what our clients say about their
+              Rooted Beauty experience.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+            {testimonials.map((t, i) => (
+              <div
+                key={t.name}
+                className="group rounded-2xl border border-gold/30 bg-card/40 p-8 shadow-luxe transition-all duration-500 hover:scale-[1.02] hover:border-gold/60 hover:shadow-gold animate-fade-in"
+                style={{ animationDelay: `${i * 0.12}s` }}
+              >
+                <Quote className="h-8 w-8 text-gold/70" />
+                <div className="mt-4 flex items-center gap-1 text-gold">
+                  {Array.from({ length: 5 }).map((_, s) => (
+                    <Star key={s} className="h-4 w-4 fill-current" />
+                  ))}
+                </div>
+                <p className="mt-5 text-lg leading-relaxed text-foreground/90">
+                  "{t.quote}"
+                </p>
+                <div className="mt-6 border-t border-border/40 pt-4">
+                  <p className="font-display text-lg">{t.name}</p>
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">{t.location}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-12 text-center">
+            <a
+              href="https://www.google.com/search?q=Rooted+Beauty+Jonesboro+GA+reviews"
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm uppercase tracking-widest text-gold hover:opacity-80"
+            >
+              See All Reviews →
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Find Us / Location */}
+      <section className="border-y border-border/40 bg-card/30 py-24">
+        <div className="container mx-auto px-6">
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-gold">Find Us</p>
+              <h2 className="mt-3 font-display text-4xl sm:text-5xl">
+                Visit Our <span className="text-gradient-gold">Studio</span>
+              </h2>
+              <div className="mt-8 space-y-4 text-muted-foreground">
+                <div className="flex items-start gap-3">
+                  <MapPin className="mt-1 h-5 w-5 shrink-0 text-gold" />
+                  <div>
+                    <p className="text-foreground font-display text-xl">Rooted Beauty</p>
+                    <p>Jonesboro / Ellenwood, GA</p>
+                    <p className="text-sm">Serving South Atlanta, Stockbridge, Morrow & surrounding areas.</p>
+                    <p className="mt-3 text-xs italic">
+                      Exact address provided after booking confirmation for client privacy.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Phone className="h-5 w-5 text-gold" />
+                  <a href="tel:+14706984059" className="text-foreground hover:text-gold">(470) 698-4059</a>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Mail className="h-5 w-5 text-gold" />
+                  <a href="mailto:hello@rootedbeauty.lovable.app" className="text-foreground hover:text-gold">hello@rootedbeauty.lovable.app</a>
+                </div>
+              </div>
+              <div className="mt-8">
+                <Button asChild variant="glam" size="xl">
+                  <Link to="/booking"><Calendar /> Book Now</Link>
+                </Button>
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-2xl border border-gold/30 shadow-luxe">
+              <iframe
+                title="Rooted Beauty location — Jonesboro / Ellenwood, GA"
+                src="https://www.google.com/maps?q=Jonesboro,GA&output=embed"
+                width="100%"
+                height="420"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="h-[420px] w-full border-0"
+              />
+            </div>
+          </div>
+
+          <p className="mt-12 text-center text-sm uppercase tracking-widest text-muted-foreground">
+            Intentionally growing toward 70–85 appointments per month — book early for best availability.
+          </p>
         </div>
       </section>
     </>
