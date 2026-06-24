@@ -2,10 +2,20 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Crown, Calendar, ArrowRight, Star, MapPin, Phone, Mail, Quote } from "lucide-react";
+import {
+  Sparkles, Crown, Calendar, ArrowRight, Star, MapPin, Phone, Mail, Quote,
+  Wand2, Flame, Waves, Plus, MessageCircle, Clock,
+} from "lucide-react";
 import { CalendarCheck, TrendingUp, Target } from "lucide-react";
 import heroImg from "@/assets/hero.jpg";
-import { styles } from "@/lib/styles-data";
+import { styles, categories } from "@/lib/styles-data";
+import {
+  Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious,
+} from "@/components/ui/carousel";
+
+const iconMap = {
+  Sparkles, Wand2, Flame, Waves, Crown, Star, Plus, MessageCircle,
+} as const;
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -146,7 +156,7 @@ function Index() {
         </div>
       </section>
 
-      {/* Featured services */}
+      {/* Signature Styles — Carousel */}
       <section className="border-y border-border/40 bg-card/30 py-20">
         <div className="container mx-auto px-6">
           <div className="flex items-end justify-between gap-6">
@@ -161,30 +171,138 @@ function Index() {
             </Link>
           </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {styles.slice(0, 3).map((style) => (
-              <Link
-                key={style.id}
-                to="/services"
-                className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card transition-all duration-500 hover:scale-[1.03] hover:border-gold/60 hover:shadow-gold animate-fade-in"
-              >
-                <div className="aspect-[4/5] overflow-hidden">
+          <Carousel
+            opts={{ align: "start", dragFree: true, loop: false }}
+            className="mt-12"
+          >
+            <CarouselContent className="-ml-4">
+              {styles.map((style) => (
+                <CarouselItem
+                  key={style.id}
+                  className="pl-4 basis-[85%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                >
+                  <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-gold/20 bg-card shadow-luxe transition-all duration-500 hover:-translate-y-1 hover:border-gold/60 hover:shadow-gold">
+                    <div className="relative aspect-[4/5] overflow-hidden">
+                      <img
+                        src={style.image}
+                        alt={style.name}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <span className="absolute left-4 top-4 rounded-full bg-background/80 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-gold backdrop-blur">
+                        {style.category}
+                      </span>
+                      <div className="absolute inset-x-4 bottom-4 h-px bg-gradient-gold opacity-80" />
+                    </div>
+                    <div className="flex flex-1 flex-col p-6">
+                      <h3 className="font-display text-2xl">{style.name}</h3>
+                      <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{style.description}</p>
+                      <div className="mt-5 flex items-center justify-between text-sm">
+                        <span className="font-display text-xl text-gradient-gold">{style.price}</span>
+                        <span className="flex items-center gap-1 text-xs uppercase tracking-widest text-muted-foreground">
+                          <Clock className="h-3.5 w-3.5 text-gold" /> {style.duration}
+                        </span>
+                      </div>
+                      <Button asChild variant="glam" size="lg" className="mt-6 w-full">
+                        <Link to="/booking" search={{ style: style.id }}>Book This Style</Link>
+                      </Button>
+                    </div>
+                  </article>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="mt-8 hidden justify-end gap-3 md:flex">
+              <CarouselPrevious className="static h-11 w-11 translate-y-0 border-gold/40 text-gold hover:bg-gold hover:text-gold-foreground" />
+              <CarouselNext className="static h-11 w-11 translate-y-0 border-gold/40 text-gold hover:bg-gold hover:text-gold-foreground" />
+            </div>
+            <p className="mt-6 text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground md:hidden">
+              Swipe to explore →
+            </p>
+          </Carousel>
+        </div>
+      </section>
+
+      {/* Menu Categories — Carousel */}
+      <section className="py-20">
+        <div className="container mx-auto px-6">
+          <div className="max-w-2xl">
+            <p className="text-xs uppercase tracking-[0.3em] text-gold">Browse By Service</p>
+            <h2 className="mt-3 font-display text-4xl sm:text-5xl">
+              Find your <span className="text-gradient-glam">category</span>
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Not sure where to start? Tap a category to see the styles inside.
+            </p>
+          </div>
+
+          <Carousel opts={{ align: "start", dragFree: true }} className="mt-10">
+            <CarouselContent className="-ml-4">
+              {categories.map((c) => {
+                const Icon = iconMap[c.icon as keyof typeof iconMap] ?? Sparkles;
+                return (
+                  <CarouselItem
+                    key={c.id}
+                    className="pl-4 basis-[78%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                  >
+                    <Link
+                      to="/services"
+                      className="group flex h-full flex-col rounded-2xl border border-border/60 bg-card p-6 transition-all duration-500 hover:-translate-y-1 hover:border-gold/60 hover:shadow-gold"
+                    >
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-gold text-gold-foreground shadow-gold">
+                        <Icon className="h-6 w-6" />
+                      </div>
+                      <h3 className="mt-5 font-display text-2xl">{c.name}</h3>
+                      <p className="mt-2 flex-1 text-sm text-muted-foreground">{c.description}</p>
+                      <div className="mt-4 text-xs uppercase tracking-widest text-gold">{c.price}</div>
+                      <div className="mt-5 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-foreground/80 group-hover:text-gold">
+                        View {c.name} <ArrowRight className="h-3.5 w-3.5" />
+                      </div>
+                    </Link>
+                  </CarouselItem>
+                );
+              })}
+            </CarouselContent>
+            <div className="mt-8 hidden justify-end gap-3 md:flex">
+              <CarouselPrevious className="static h-11 w-11 translate-y-0 border-gold/40 text-gold hover:bg-gold hover:text-gold-foreground" />
+              <CarouselNext className="static h-11 w-11 translate-y-0 border-gold/40 text-gold hover:bg-gold hover:text-gold-foreground" />
+            </div>
+          </Carousel>
+        </div>
+      </section>
+
+      {/* Homepage gallery preview — masonry lookbook */}
+      <section className="border-y border-border/40 bg-card/30 py-20">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-gold">The Lookbook</p>
+              <h2 className="mt-3 font-display text-4xl sm:text-5xl">
+                Real <span className="text-gradient-gold">crowns</span> in the wild
+              </h2>
+            </div>
+            <Button asChild variant="luxe" size="lg">
+              <Link to="/gallery">View Full Gallery <ArrowRight /></Link>
+            </Button>
+          </div>
+
+          <div className="mt-10 columns-2 gap-4 lg:columns-3 [column-fill:_balance]">
+            {[...styles, ...styles.slice(0, 4)].slice(0, 9).map((s, i) => {
+              const heights = ["h-56", "h-80", "h-72", "h-96", "h-60"];
+              return (
+                <Link
+                  key={`${s.id}-${i}`}
+                  to="/gallery"
+                  className={`group mb-4 block overflow-hidden rounded-2xl border border-border/60 shadow-luxe ${heights[i % heights.length]} break-inside-avoid`}
+                >
                   <img
-                    src={style.image}
-                    alt={style.name}
-                    width={1024}
-                    height={1280}
+                    src={s.image}
+                    alt={s.name}
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                </div>
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background via-background/85 to-transparent p-6">
-                  <h3 className="font-display text-2xl">{style.name}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{style.tagline}</p>
-                  <p className="mt-3 text-xs uppercase tracking-widest text-gold">{style.price}</p>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
