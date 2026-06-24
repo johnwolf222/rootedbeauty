@@ -347,6 +347,71 @@ function Index() {
         </div>
       </section>
 
+      {/* Booking Goals */}
+      <section className="border-t border-border/40 bg-card/30 py-24">
+        <div className="container mx-auto px-6">
+          <div className="max-w-2xl">
+            <p className="text-xs uppercase tracking-[0.3em] text-gold">Our Growth Goals</p>
+            <h2 className="mt-3 font-display text-4xl sm:text-5xl">
+              Our <span className="text-gradient-gold">Booking Goals</span>
+            </h2>
+            <p className="mt-6 text-muted-foreground">
+              We're building something intentional at Rooted Beauty — a space where
+              quality, care, and consistency come first. Here's what we're aiming for this year.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-6 md:grid-cols-3">
+            {[
+              { icon: Target, label: "Short-term · Next 3 months", value: "45–55", suffix: "appointments / month" },
+              { icon: TrendingUp, label: "Mid-term · Next 6 months", value: "70–85", suffix: "appointments / month" },
+              { icon: CalendarCheck, label: "Long-term · 12 months", value: "100+", suffix: "appointments / month" },
+            ].map(({ icon: Icon, label, value, suffix }) => (
+              <div
+                key={label}
+                className="rounded-2xl border border-gold/30 bg-background/40 p-8 shadow-luxe transition-all hover:border-gold/60 hover:shadow-glam"
+              >
+                <Icon className="h-6 w-6 text-gold" />
+                <p className="mt-4 text-xs uppercase tracking-[0.3em] text-muted-foreground">{label}</p>
+                <div className="mt-4 font-display text-6xl sm:text-7xl text-gradient-glam">{value}</div>
+                <p className="mt-2 text-sm text-muted-foreground">{suffix}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-16 grid gap-10 lg:grid-cols-2">
+            <div className="rounded-2xl border border-border/60 bg-background/40 p-8">
+              <h3 className="font-display text-2xl">What this means for you</h3>
+              <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
+                <li className="flex gap-3"><span className="text-gold">✦</span> More availability for your preferred times</li>
+                <li className="flex gap-3"><span className="text-gold">✦</span> Faster booking for popular styles — Goddess Braids, Silk Press, Knotless</li>
+                <li className="flex gap-3"><span className="text-gold">✦</span> Dedicated slots for Event Glam &amp; Bridal Parties</li>
+              </ul>
+              <p className="mt-6 text-sm text-muted-foreground">
+                We track these targets weekly so we can open more spots as demand grows —
+                without ever rushing your experience.
+              </p>
+            </div>
+            <div className="flex flex-col justify-between rounded-2xl border border-gold/40 bg-gradient-noir p-8">
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-gold">Limited slots each month</p>
+                <h3 className="mt-3 font-display text-3xl">
+                  Reserve your spot to protect the quality you deserve.
+                </h3>
+              </div>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Button asChild variant="glam" size="xl">
+                  <Link to="/booking">Book Your Experience</Link>
+                </Button>
+                <Button asChild variant="luxe" size="xl">
+                  <Link to="/booking">See Current Availability</Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials */}
       <section className="relative overflow-hidden py-24">
         <div className="absolute inset-0 -z-10 bg-gradient-noir" />
