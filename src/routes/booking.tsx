@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import {
   Clock,
   ImagePlus,
   Scissors,
+  Upload,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
@@ -87,7 +88,6 @@ const formSchema = z.object({
   hair_length: z.string().optional(),
   hair_condition: z.string().optional(),
   add_ons: z.array(z.string()).optional(),
-  inspiration: z.string().max(300).optional(),
   notes: z.string().max(800).optional(),
   policyAgreed: z
     .boolean()
@@ -125,15 +125,29 @@ function BookingPage() {
     hair_length: "",
     hair_condition: "",
     add_ons: [] as string[],
-    inspiration: "",
     notes: "",
     policyAgreed: false,
   });
+
+  const [inspirationFile, setInspirationFile] = useState<File | null>(null);
+  const [inspirationPreview, setInspirationPreview] = useState("");
 
   const selectedStyle = useMemo(
     () => styles.find((style) => style.id === form.service) ?? null,
     [form.service],
   );
+
+  useEffect(() => {
+    if (!inspirationFile) {
+      setInspirationPreview("");
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(inspirationFile);
+    setInspirationPreview(previewUrl);
+
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [inspirationFile]);
 
   const update = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => {
     setForm((current) => ({ ...current, [key]: value }));
@@ -173,7 +187,7 @@ function BookingPage() {
       parsed.data.hair_length ? `Hair length: ${parsed.data.hair_length}` : "",
       parsed.data.hair_condition ? `Hair condition: ${parsed.data.hair_condition}` : "",
       parsed.data.add_ons?.length ? `Requested add-ons: ${parsed.data.add_ons.join(", ")}` : "",
-      parsed.data.inspiration ? `Inspiration: ${parsed.data.inspiration}` : "",
+      inspirationFile ? `Inspiration image selected: ${inspirationFile.name}` : "",
       parsed.data.notes ? `Client notes: ${parsed.data.notes}` : "",
     ]
       .filter(Boolean)
@@ -299,7 +313,6 @@ function BookingPage() {
                   preferred_time: "",
                   style: "",
                   notes: "",
-                  inspiration: "",
                   add_ons: [],
                   policyAgreed: false,
                 }));
@@ -548,16 +561,71 @@ function BookingPage() {
                 </Select>
               </Field>
 
-              <Field label="Inspiration photo or link" className="sm:col-span-2">
-                <div className="relative">
-                  <ImagePlus className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gold" />
-                  <Input
-                    value={form.inspiration}
-                    onChange={(e) => update("inspiration", e.target.value)}
-                    placeholder="Paste image link, Instagram link, or describe the look"
-                    maxLength={300}
-                    className="pl-10"
+              <Field label="Inspiration photo upload" className="sm:col-span-2">
+                <div className="rounded-2xl border border-border/60 bg-background/30 p-4">
+                  <input
+                    id="inspiration-upload"
+                    type="file"
+                    accept="image/*"
+                    className="sr-only"
+                    onChange={(event) => {
+                      const file = event.target.files?.[0] ?? null;
+                      setInspirationFile(file);
+                    }}
                   />
+
+                  <label
+                    htmlFor="inspiration-upload"
+                    className="flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-gold/40 bg-card/40 px-5 py-8 text-center transition-all duration-300 hover:border-gold hover:bg-gold/10 sm:flex-row sm:justify-start sm:text-left"
+                  >
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-gold text-gold-foreground shadow-gold">
+                      <Upload className="h-6 w-6" />
+                    </div>
+
+                    <div className="mt-4 sm:ml-5 sm:mt-0">
+                      <div className="font-display text-2xl">
+                        Upload inspiration image
+                      </div>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        Add a photo from your phone or computer so Rooted Beauty can see the look you want.
+                      </p>
+                      <p className="mt-2 text-xs uppercase tracking-[0.25em] text-gold">
+                        JPG, PNG, or image file
+                      </p>
+                    </div>
+                  </label>
+
+                  {inspirationFile && (
+                    <div className="mt-4 grid gap-4 rounded-xl border border-gold/30 bg-background/40 p-4 sm:grid-cols-[120px_1fr]">
+                      {inspirationPreview ? (
+                        <img
+                          src={inspirationPreview}
+                          alt="Selected inspiration preview"
+                          className="h-32 w-full rounded-xl object-cover sm:h-28"
+                        />
+                      ) : (
+                        <div className="flex h-28 items-center justify-center rounded-xl border border-border/60 bg-card/40">
+                          <ImagePlus className="h-6 w-6 text-gold" />
+                        </div>
+                      )}
+
+                      <div className="flex flex-col justify-center">
+                        <div className="text-xs uppercase tracking-[0.25em] text-gold">
+                          Selected Image
+                        </div>
+                        <div className="mt-1 break-all text-sm text-foreground">
+                          {inspirationFile.name}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setInspirationFile(null)}
+                          className="mt-3 w-fit text-xs uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-gold"
+                        >
+                          Remove image
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </Field>
 
