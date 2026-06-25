@@ -1,55 +1,204 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
-import { z } from "zod";
+import { createFileRoute } from "@tanstack/react-router";
+import { type TouchEvent, useMemo, useState } from "react";
 import { toast } from "sonner";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CalendarDays,
+  CheckCircle2,
+  Clock3,
+  CreditCard,
+  Home,
+  LockKeyhole,
+  Scissors,
+  ShieldCheck,
+  Sparkles,
+  Upload,
+  UserRound,
+  X,
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { styles, timeSlots } from "@/lib/styles-data";
-import { supabase } from "@/integrations/supabase/client";
-import {
-  Calendar,
-  CheckCircle2,
-  Clock,
-  ImagePlus,
-  Scissors,
-  Upload,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
 
-const bookingSearchSchema = z.object({
-  style: z.string().optional(),
-});
+import styleBraids from "@/assets/style-braids.jpg";
+import styleBoxBraids from "@/assets/style-box-braids.jpg";
+import styleStraight from "@/assets/style-straight.jpg";
+import styleWavy from "@/assets/style-wavy.jpg";
+import styleLocs from "@/assets/style-locs.jpg";
 
 export const Route = createFileRoute("/booking")({
   head: () => ({
     meta: [
-      { title: "Book an Appointment — Rooted Beauty" },
+      { title: "Secure Booking — Rooted Beauty" },
       {
         name: "description",
         content:
-          "Reserve your seat at Rooted Beauty. Choose your service, date and time.",
-      },
-      { property: "og:title", content: "Book at Rooted Beauty" },
-      {
-        property: "og:description",
-        content: "Reserve a luxury styling appointment.",
+          "Secure a Rooted Beauty appointment through a guided booking and deposit flow.",
       },
     ],
   }),
-  validateSearch: bookingSearchSchema,
   component: BookingPage,
 });
+
+type ServiceOption = {
+  id: string;
+  category: string;
+  name: string;
+  description: string;
+  priceLabel: string;
+  durationLabel: string;
+  basePriceCents: number;
+  image: string;
+};
+
+type BookingFormState = {
+  name: string;
+  phone: string;
+  email: string;
+  service: string;
+  style: string;
+  preferred_date: string;
+  preferred_time: string;
+  hair_length: string;
+  hair_condition: string;
+  add_ons: string[];
+  notes: string;
+  policyAgreed: boolean;
+};
+
+const services: ServiceOption[] = [
+  {
+    id: "braids",
+    category: "Braids",
+    name: "Goddess Braids",
+    description: "Knotless and goddess braid techniques with a soft luxury finish.",
+    priceLabel: "from $220",
+    durationLabel: "5–7 hrs",
+    basePriceCents: 22000,
+    image: styleBraids,
+  },
+  {
+    id: "box-braids",
+    category: "Braids",
+    name: "Box Braids",
+    description: "Classic box braids in any length with a clean, finished look.",
+    priceLabel: "from $260",
+    durationLabel: "6–8 hrs",
+    basePriceCents: 26000,
+    image: styleBoxBraids,
+  },
+  {
+    id: "straight",
+    category: "Silk Press",
+    name: "Silk Press",
+    description: "Healthy heat silk press with shine, movement, and polish.",
+    priceLabel: "from $120",
+    durationLabel: "2–3 hrs",
+    basePriceCents: 12000,
+    image: styleStraight,
+  },
+  {
+    id: "wavy",
+    category: "Waves",
+    name: "Hollywood Waves",
+    description: "Soft glam waves for events, photos, and elevated occasions.",
+    priceLabel: "from $150",
+    durationLabel: "2 hrs",
+    basePriceCents: 15000,
+    image: styleWavy,
+  },
+  {
+    id: "locs",
+    category: "Locs",
+    name: "Luxury Locs",
+    description: "Loc maintenance, retwists, styling, and luxury loc care.",
+    priceLabel: "from $180",
+    durationLabel: "3–5 hrs",
+    basePriceCents: 18000,
+    image: styleLocs,
+  },
+  {
+    id: "event-glam",
+    category: "Event Glam",
+    name: "Event Glam",
+    description: "Special event styling for camera-ready hair and polished looks.",
+    priceLabel: "from $200",
+    durationLabel: "1.5–3 hrs",
+    basePriceCents: 20000,
+    image: styleWavy,
+  },
+  {
+    id: "bridal",
+    category: "Bridal",
+    name: "Bridal Hair",
+    description: "Trial and day-of bridal styling with a timeless finish.",
+    priceLabel: "from $350",
+    durationLabel: "3–4 hrs",
+    basePriceCents: 35000,
+    image: styleStraight,
+  },
+  {
+    id: "protective",
+    category: "Protective",
+    name: "Protective Styles",
+    description: "Low-tension protective styling focused on healthy hair.",
+    priceLabel: "from $180",
+    durationLabel: "4–6 hrs",
+    basePriceCents: 18000,
+    image: styleBraids,
+  },
+];
+
+const steps = [
+  { label: "Service", icon: Scissors },
+  { label: "Client", icon: UserRound },
+  { label: "Schedule", icon: CalendarDays },
+  { label: "Hair", icon: Sparkles },
+  { label: "Secure", icon: ShieldCheck },
+];
+
+const timeOptions = [
+  "8:00 AM",
+  "8:30 AM",
+  "9:00 AM",
+  "9:30 AM",
+  "10:00 AM",
+  "10:30 AM",
+  "11:00 AM",
+  "11:30 AM",
+  "12:00 PM",
+  "12:30 PM",
+  "1:00 PM",
+  "1:30 PM",
+  "2:00 PM",
+  "2:30 PM",
+  "3:00 PM",
+  "3:30 PM",
+  "4:00 PM",
+  "4:30 PM",
+  "5:00 PM",
+  "5:30 PM",
+  "6:00 PM",
+];
+
+const hairLengths = [
+  "Ear length",
+  "Shoulder length",
+  "Mid-back",
+  "Waist length",
+  "Extra long",
+];
+
+const hairConditions = [
+  "Detangled",
+  "Natural / stretched",
+  "Blow-dried",
+  "Previously styled",
+  "Needs take-down",
+];
 
 const addOnOptions = [
   "Scalp therapy",
@@ -58,769 +207,778 @@ const addOnOptions = [
   "Take-down help",
   "Trim",
   "Gold cuffs / beads",
-] as const;
-
-const hairLengthOptions = [
-  "Short / above shoulders",
-  "Shoulder length",
-  "Mid-back",
-  "Waist length",
-  "Not sure",
-] as const;
-
-const hairConditionOptions = [
-  "Freshly washed",
-  "Needs wash",
-  "Detangled",
-  "Needs detangling",
-  "Sensitive scalp",
-  "Recent color / chemical service",
-] as const;
-
-const formSchema = z.object({
-  name: z.string().trim().min(2, "Please enter your full name").max(80),
-  email: z.string().trim().email("Enter a valid email").max(255),
-  phone: z.string().trim().min(7, "Enter a valid phone").max(30),
-  service: z.string().min(1, "Select a service"),
-  style: z.string().max(120).optional(),
-  preferred_date: z.string().min(1, "Pick a date"),
-  preferred_time: z.string().min(1, "Pick a time"),
-  hair_length: z.string().optional(),
-  hair_condition: z.string().optional(),
-  add_ons: z.array(z.string()).optional(),
-  notes: z.string().max(800).optional(),
-  policyAgreed: z
-    .boolean()
-    .refine((value) => value === true, "Please agree to the booking policy"),
-});
-
-type BookingConfirmation = {
-  status: "sent" | "local";
-  name: string;
-  email: string;
-  phone: string;
-  serviceName: string;
-  servicePrice: string;
-  serviceDuration: string;
-  date: string;
-  time: string;
-};
+];
 
 function BookingPage() {
-  const search = Route.useSearch();
-  const navigate = useNavigate();
-  const today = new Date().toISOString().split("T")[0];
-
+  const [step, setStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
-  const [confirmation, setConfirmation] = useState<BookingConfirmation | null>(null);
+  const [inspirationFile, setInspirationFile] = useState<File | null>(null);
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(
+    null,
+  );
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<BookingFormState>({
     name: "",
-    email: "",
     phone: "",
-    service: search.style ?? "",
+    email: "",
+    service: "",
     style: "",
     preferred_date: "",
     preferred_time: "",
     hair_length: "",
     hair_condition: "",
-    add_ons: [] as string[],
+    add_ons: [],
     notes: "",
     policyAgreed: false,
   });
 
-  const [inspirationFile, setInspirationFile] = useState<File | null>(null);
-  const [inspirationPreview, setInspirationPreview] = useState("");
-
-  const selectedStyle = useMemo(
-    () => styles.find((style) => style.id === form.service) ?? null,
+  const selectedService = useMemo(
+    () => services.find((service) => service.id === form.service) ?? null,
     [form.service],
   );
 
-  useEffect(() => {
-    if (!inspirationFile) {
-      setInspirationPreview("");
-      return;
+  const depositAmount = selectedService
+    ? Math.round(selectedService.basePriceCents * 0.3) / 100
+    : null;
+
+  const minDate = useMemo(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }, []);
+
+  function updateField<K extends keyof BookingFormState>(
+    key: K,
+    value: BookingFormState[K],
+  ) {
+    setForm((current) => ({
+      ...current,
+      [key]: value,
+    }));
+  }
+
+  function toggleAddOn(value: string) {
+    setForm((current) => ({
+      ...current,
+      add_ons: current.add_ons.includes(value)
+        ? current.add_ons.filter((item) => item !== value)
+        : [...current.add_ons, value],
+    }));
+  }
+
+  function validateStep(targetStep: number) {
+    if (targetStep === 0 && !form.service) {
+      toast.error("Choose a service first.");
+      return false;
     }
 
-    const previewUrl = URL.createObjectURL(inspirationFile);
-    setInspirationPreview(previewUrl);
+    if (targetStep === 1) {
+      if (!form.name.trim()) {
+        toast.error("Enter the client name.");
+        return false;
+      }
 
-    return () => URL.revokeObjectURL(previewUrl);
-  }, [inspirationFile]);
+      if (!form.phone.trim()) {
+        toast.error("Enter the phone number.");
+        return false;
+      }
 
-  const update = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => {
-    setForm((current) => ({ ...current, [key]: value }));
-  };
+      if (!form.email.trim()) {
+        toast.error("Enter the email address.");
+        return false;
+      }
+    }
 
-  const toggleAddOn = (addOn: string) => {
-    setForm((current) => {
-      const exists = current.add_ons.includes(addOn);
-      return {
-        ...current,
-        add_ons: exists
-          ? current.add_ons.filter((item) => item !== addOn)
-          : [...current.add_ons, addOn],
-      };
+    if (targetStep === 2) {
+      if (!form.preferred_date) {
+        toast.error("Choose a preferred date.");
+        return false;
+      }
+
+      if (!form.preferred_time) {
+        toast.error("Choose a preferred time.");
+        return false;
+      }
+    }
+
+    if (targetStep === 4 && !form.policyAgreed) {
+      toast.error("Agree to the booking policy before securing the appointment.");
+      return false;
+    }
+
+    return true;
+  }
+
+  function nextStep() {
+    if (!validateStep(step)) return;
+    setStep((current) => Math.min(current + 1, steps.length - 1));
+  }
+
+  function previousStep() {
+    setStep((current) => Math.max(current - 1, 0));
+  }
+
+  function cancelBooking() {
+    const confirmed = window.confirm("Cancel this booking and return to the site?");
+
+    if (confirmed) {
+      window.location.href = "/";
+    }
+  }
+
+  function handleTouchStart(event: TouchEvent<HTMLElement>) {
+    const touch = event.touches[0];
+
+    if (!touch) return;
+
+    setTouchStart({
+      x: touch.clientX,
+      y: touch.clientY,
     });
-  };
+  }
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  function handleTouchEnd(event: TouchEvent<HTMLElement>) {
+    if (!touchStart) return;
 
-    const parsed = formSchema.safeParse(form);
+    const touch = event.changedTouches[0];
 
-    if (!parsed.success) {
-      toast.error(parsed.error.issues[0].message);
-      return;
+    if (!touch) return;
+
+    const deltaX = touch.clientX - touchStart.x;
+    const deltaY = touch.clientY - touchStart.y;
+
+    setTouchStart(null);
+
+    const horizontal = Math.abs(deltaX);
+    const vertical = Math.abs(deltaY);
+
+    if (horizontal < 80) return;
+    if (horizontal < vertical * 1.25) return;
+
+    if (deltaX < 0 && step < steps.length - 1) {
+      nextStep();
     }
 
-    const chosenStyle = styles.find((style) => style.id === parsed.data.service);
+    if (deltaX > 0 && step > 0) {
+      previousStep();
+    }
+  }
 
-    if (!chosenStyle) {
-      toast.error("Please choose a valid service.");
+  async function secureBooking() {
+    if (!validateStep(4)) return;
+
+    if (!selectedService) {
+      toast.error("Choose a service before payment.");
       return;
     }
-
-    const detailedNotes = [
-      parsed.data.style ? `Style detail: ${parsed.data.style}` : "",
-      parsed.data.hair_length ? `Hair length: ${parsed.data.hair_length}` : "",
-      parsed.data.hair_condition ? `Hair condition: ${parsed.data.hair_condition}` : "",
-      parsed.data.add_ons?.length ? `Requested add-ons: ${parsed.data.add_ons.join(", ")}` : "",
-      inspirationFile ? `Inspiration image selected: ${inspirationFile.name}` : "",
-      parsed.data.notes ? `Client notes: ${parsed.data.notes}` : "",
-    ]
-      .filter(Boolean)
-      .join("\n");
 
     setSubmitting(true);
 
     try {
-      const { error } = await supabase.from("bookings").insert({
-        name: parsed.data.name,
-        email: parsed.data.email,
-        phone: parsed.data.phone,
-        service: parsed.data.service,
-        style: parsed.data.style || null,
-        preferred_date: parsed.data.preferred_date,
-        preferred_time: parsed.data.preferred_time,
-        notes: detailedNotes || null,
-      });
+      const detailedNotes = [
+        form.style ? `Style detail: ${form.style}` : "",
+        form.hair_length ? `Hair length: ${form.hair_length}` : "",
+        form.hair_condition ? `Hair condition: ${form.hair_condition}` : "",
+        form.add_ons.length ? `Requested add-ons: ${form.add_ons.join(", ")}` : "",
+        inspirationFile ? `Inspiration image selected: ${inspirationFile.name}` : "",
+        form.notes ? `Client notes: ${form.notes}` : "",
+      ]
+        .filter(Boolean)
+        .join("\n");
 
-      if (error) {
-        throw error;
+      const response = await fetch(
+        "https://phzantrwicmjmwqjrmrs.supabase.co/functions/v1/create-booking-authorization",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: form.name.trim(),
+            email: form.email.trim(),
+            phone: form.phone.trim(),
+            service: form.service,
+            style: form.style.trim() || null,
+            preferred_date: form.preferred_date,
+            preferred_time: form.preferred_time,
+            hair_length: form.hair_length || null,
+            hair_condition: form.hair_condition || null,
+            add_ons: form.add_ons,
+            notes: detailedNotes || null,
+            inspiration_image_path: null,
+            policy_agreed: form.policyAgreed,
+          }),
+        },
+      );
+
+      let data: any = null;
+
+      try {
+        data = await response.json();
+      } catch {
+        data = null;
       }
 
-      setConfirmation({
-        status: "sent",
-        name: parsed.data.name,
-        email: parsed.data.email,
-        phone: parsed.data.phone,
-        serviceName: chosenStyle.name,
-        servicePrice: chosenStyle.price,
-        serviceDuration: chosenStyle.duration,
-        date: parsed.data.preferred_date,
-        time: parsed.data.preferred_time,
-      });
-
-      toast.success("Booking received — we'll confirm shortly!");
-    } catch (error) {
-      console.error("Booking submit failed:", error);
-
-      const fallbackBooking = {
-        ...parsed.data,
-        serviceName: chosenStyle.name,
-        servicePrice: chosenStyle.price,
-        serviceDuration: chosenStyle.duration,
-        receivedAt: new Date().toISOString(),
-      };
-
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem(
-          "rootedbeauty-last-booking",
-          JSON.stringify(fallbackBooking),
+      if (!response.ok) {
+        throw new Error(
+          data?.error ||
+            data?.message ||
+            `Could not open secure payment. Status ${response.status}.`,
         );
       }
 
-      setConfirmation({
-        status: "local",
-        name: parsed.data.name,
-        email: parsed.data.email,
-        phone: parsed.data.phone,
-        serviceName: chosenStyle.name,
-        servicePrice: chosenStyle.price,
-        serviceDuration: chosenStyle.duration,
-        date: parsed.data.preferred_date,
-        time: parsed.data.preferred_time,
-      });
+      if (!data?.checkout_url) {
+        throw new Error("Stripe checkout URL was not returned.");
+      }
 
-      toast.warning("Booking saved locally. Connect Supabase to receive live requests.");
+      toast.success("Opening secure Stripe checkout...");
+      window.location.href = data.checkout_url;
+    } catch (error) {
+      console.error("Secure booking failed:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Could not open secure payment.",
+      );
     } finally {
       setSubmitting(false);
     }
   }
 
-  if (confirmation) {
-    return (
-      <div className="bg-gradient-noir">
-        <section className="container mx-auto flex min-h-[78vh] max-w-3xl flex-col items-center justify-center px-6 py-24 text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full border border-gold/50 bg-card/70 shadow-gold">
-            <CheckCircle2 className="h-11 w-11 text-gold" />
-          </div>
+  return (
+    <main
+      className="min-h-screen bg-gradient-noir text-foreground"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+      <section className="border-b border-border/50 bg-black/70 backdrop-blur">
+        <div className="container mx-auto flex items-center justify-between gap-4 px-5 py-4">
+          <button
+            type="button"
+            onClick={() => {
+              window.location.href = "/";
+            }}
+            className="font-display text-2xl"
+          >
+            Rooted<span className="text-gold">Beauty</span>
+          </button>
 
-          <p className="mt-8 text-xs uppercase tracking-[0.3em] text-gold">
-            {confirmation.status === "sent" ? "Request Received" : "Demo Request Saved"}
-          </p>
-
-          <h1 className="mt-3 font-display text-5xl sm:text-6xl">
-            {confirmation.status === "sent"
-              ? "Your seat is almost reserved."
-              : "Your request is saved locally."}
-          </h1>
-
-          <p className="mt-5 max-w-xl text-muted-foreground">
-            {confirmation.status === "sent"
-              ? "Thank you for booking with Rooted Beauty. We’ll review your request and respond within 24 hours with confirmation, prep tips, and next steps."
-              : "The form is working visually, but Supabase still needs to be connected for real live booking submissions."}
-          </p>
-
-          <div className="mt-10 w-full rounded-3xl border border-border/60 bg-card/50 p-6 text-left shadow-luxe backdrop-blur-sm">
-            <div className="grid gap-5 sm:grid-cols-2">
-              <SummaryItem label="Client" value={confirmation.name} />
-              <SummaryItem label="Contact" value={confirmation.phone} />
-              <SummaryItem label="Email" value={confirmation.email} className="sm:col-span-2" />
-              <SummaryItem label="Service" value={confirmation.serviceName} />
-              <SummaryItem label="Starting Price" value={confirmation.servicePrice} />
-              <SummaryItem label="Date" value={confirmation.date} />
-              <SummaryItem label="Time" value={confirmation.time} />
-              <SummaryItem label="Duration" value={confirmation.serviceDuration} />
-              <SummaryItem label="Next Step" value="Confirmation text/email within 24 hours" />
-            </div>
-          </div>
-
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Button variant="luxe" size="lg" onClick={() => navigate({ to: "/" })}>
-              Back to Home
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={cancelBooking}>
+              <X className="h-4 w-4" />
+              Cancel
             </Button>
+
             <Button
-              variant="glam"
-              size="lg"
+              variant="outline"
+              size="sm"
               onClick={() => {
-                setConfirmation(null);
-                setForm((current) => ({
-                  ...current,
-                  preferred_date: "",
-                  preferred_time: "",
-                  style: "",
-                  notes: "",
-                  add_ons: [],
-                  policyAgreed: false,
-                }));
+                window.location.href = "/";
               }}
             >
-              Book Another
+              <Home className="h-4 w-4" />
+              View Site
             </Button>
           </div>
-        </section>
-      </div>
-    );
-  }
+        </div>
+      </section>
 
-  return (
-    <div className="bg-gradient-noir">
-      <section className="container mx-auto px-6 py-20">
-        <div className="grid gap-12 lg:grid-cols-[0.9fr_1.4fr] lg:gap-16">
-          <aside className="lg:sticky lg:top-28 lg:self-start">
-            <p className="text-xs uppercase tracking-[0.3em] text-gold">Reserve</p>
-
-            <h1 className="mt-3 font-display text-5xl sm:text-6xl">
-              Book your <span className="text-gradient-glam">seat</span>
-            </h1>
-
-            <p className="mt-6 text-muted-foreground">
-              Choose your service, share your hair details, and request your preferred date.
-              We’ll respond with confirmation, prep notes, and next steps.
-            </p>
-
-            <div className="mt-8 space-y-4 text-sm">
-              <Detail title="Deposit" body="A 30% deposit secures your slot after approval." />
-              <Detail title="Cancellation" body="Free cancellation up to 48 hours before." />
-              <Detail title="Late Policy" body="15-minute grace period before rescheduling." />
-              <Detail title="Privacy" body="Exact address is provided after booking confirmation." />
-            </div>
-
-            <SelectedServiceCard style={selectedStyle} />
-          </aside>
-
-          <form
-            onSubmit={onSubmit}
-            className="rounded-3xl border border-border/60 bg-card/50 p-5 shadow-luxe backdrop-blur-sm sm:p-8"
-          >
-            <BookingStep
-              number="01"
-              title="Choose your service"
-              description="Select the look you want. Prices and timing are shown before you submit."
-            />
-
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {styles.map((style) => {
-                const active = form.service === style.id;
+      <section className="container mx-auto flex min-h-[calc(100vh-73px)] items-center px-5 py-8">
+        <div className="mx-auto w-full max-w-5xl">
+          <div className="mb-6 rounded-3xl border border-border/60 bg-card/40 p-4 shadow-luxe backdrop-blur">
+            <div className="flex items-center justify-between gap-3">
+              {steps.map((item, index) => {
+                const Icon = item.icon;
+                const active = index === step;
+                const done = index < step;
 
                 return (
-                  <button
-                    key={style.id}
-                    type="button"
-                    onClick={() => update("service", style.id)}
-                    className={cn(
-                      "group overflow-hidden rounded-2xl border bg-background/35 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/60 hover:shadow-gold",
-                      active
-                        ? "border-gold shadow-gold"
-                        : "border-border/60",
-                    )}
+                  <div
+                    key={item.label}
+                    className={[
+                      "flex min-w-0 flex-1 items-center gap-3 rounded-2xl px-3 py-3 transition",
+                      active ? "bg-gold/10" : "",
+                    ].join(" ")}
                   >
-                    <div className="flex gap-4 p-3">
-                      <img
-                        src={style.image}
-                        alt={style.name}
-                        className="h-24 w-20 rounded-xl object-cover"
-                        loading="lazy"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="text-[10px] uppercase tracking-[0.25em] text-gold">
-                          {style.category}
-                        </div>
-                        <h3 className="mt-1 font-display text-xl leading-tight">{style.name}</h3>
-                        <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-                          {style.description}
-                        </p>
-                        <div className="mt-3 flex flex-wrap gap-3 text-xs">
-                          <span className="text-gradient-gold font-display text-base">
-                            {style.price}
-                          </span>
-                          <span className="flex items-center gap-1 text-muted-foreground">
-                            <Clock className="h-3 w-3 text-gold" />
-                            {style.duration}
-                          </span>
-                        </div>
-                      </div>
+                    <div
+                      className={[
+                        "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border",
+                        active
+                          ? "border-gold text-gold"
+                          : done
+                            ? "border-pink/70 text-pink"
+                            : "border-border/70 text-muted-foreground",
+                      ].join(" ")}
+                    >
+                      {done ? <CheckCircle2 className="h-5 w-5" /> : <Icon className="h-5 w-5" />}
                     </div>
-                  </button>
+
+                    <div className="hidden min-w-0 sm:block">
+                      <p className="truncate text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                        Step {index + 1}
+                      </p>
+                      <p
+                        className={[
+                          "truncate text-sm font-medium",
+                          active ? "text-gold" : "text-foreground",
+                        ].join(" ")}
+                      >
+                        {item.label}
+                      </p>
+                    </div>
+                  </div>
                 );
               })}
             </div>
+          </div>
 
-            <div className="mt-10 h-px bg-border/60" />
-
-            <BookingStep
-              number="02"
-              title="Client details"
-              description="Tell us who the appointment is for and how to confirm it."
-              className="mt-10"
-            />
-
-            <div className="mt-6 grid gap-5 sm:grid-cols-2">
-              <Field label="Full name" required>
-                <Input
-                  value={form.name}
-                  onChange={(e) => update("name", e.target.value)}
-                  required
-                  maxLength={80}
-                  placeholder="Your full name"
-                />
-              </Field>
-
-              <Field label="Phone" required>
-                <Input
-                  type="tel"
-                  value={form.phone}
-                  onChange={(e) => update("phone", e.target.value)}
-                  required
-                  maxLength={30}
-                  placeholder="Best number to text"
-                />
-              </Field>
-
-              <Field label="Email" required className="sm:col-span-2">
-                <Input
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => update("email", e.target.value)}
-                  required
-                  maxLength={255}
-                  placeholder="you@example.com"
-                />
-              </Field>
-            </div>
-
-            <div className="mt-10 h-px bg-border/60" />
-
-            <BookingStep
-              number="03"
-              title="Appointment request"
-              description="Pick your preferred date and time. Final availability is confirmed by Rooted Beauty."
-              className="mt-10"
-            />
-
-            <div className="mt-6 grid gap-5 sm:grid-cols-2">
-              <Field label="Service" required>
-                <Select value={form.service} onValueChange={(value) => update("service", value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Choose a service" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {styles.map((style) => (
-                      <SelectItem key={style.id} value={style.id}>
-                        {style.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </Field>
-
-              <Field label="Style detail">
-                <Input
-                  value={form.style}
-                  onChange={(e) => update("style", e.target.value)}
-                  placeholder="Knotless, mid-back, side part..."
-                  maxLength={120}
-                />
-              </Field>
-
-              <Field label="Preferred date" required>
-                <Input
-                  type="date"
-                  min={today}
-                  value={form.preferred_date}
-                  onChange={(e) => update("preferred_date", e.target.value)}
-                  required
-                />
-              </Field>
-
-              <Field label="Preferred time" required>
-                <Select
-                  value={form.preferred_time}
-                  onValueChange={(value) => update("preferred_time", value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Pick a time" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {timeSlots.map((time) => (
-                      <SelectItem key={time} value={time}>
-                        {time}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </Field>
-            </div>
-
-            <div className="mt-10 h-px bg-border/60" />
-
-            <BookingStep
-              number="04"
-              title="Hair details"
-              description="These details help us prepare the right timing, products, and styling plan."
-              className="mt-10"
-            />
-
-            <div className="mt-6 grid gap-5 sm:grid-cols-2">
-              <Field label="Hair length">
-                <Select
-                  value={form.hair_length}
-                  onValueChange={(value) => update("hair_length", value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Choose length" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {hairLengthOptions.map((length) => (
-                      <SelectItem key={length} value={length}>
-                        {length}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </Field>
-
-              <Field label="Hair condition">
-                <Select
-                  value={form.hair_condition}
-                  onValueChange={(value) => update("hair_condition", value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Choose condition" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {hairConditionOptions.map((condition) => (
-                      <SelectItem key={condition} value={condition}>
-                        {condition}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </Field>
-
-              <Field label="Inspiration photo upload" className="sm:col-span-2">
-                <div className="rounded-2xl border border-border/60 bg-background/30 p-4">
-                  <input
-                    id="inspiration-upload"
-                    type="file"
-                    accept="image/*"
-                    className="sr-only"
-                    onChange={(event) => {
-                      const file = event.target.files?.[0] ?? null;
-                      setInspirationFile(file);
-                    }}
+          <div className="overflow-hidden rounded-[2rem] border border-border/70 bg-card/60 shadow-luxe backdrop-blur">
+            <div className="grid min-h-[580px] lg:grid-cols-[0.9fr_1.15fr]">
+              <aside className="relative hidden overflow-hidden border-r border-border/60 lg:block">
+                <div className="absolute inset-0">
+                  <img
+                    src={selectedService?.image ?? styleBraids}
+                    alt={selectedService?.name ?? "Rooted Beauty"}
+                    className="h-full w-full object-cover opacity-70"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/20" />
+                </div>
 
-                  <label
-                    htmlFor="inspiration-upload"
-                    className="flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-gold/40 bg-card/40 px-5 py-8 text-center transition-all duration-300 hover:border-gold hover:bg-gold/10 sm:flex-row sm:justify-start sm:text-left"
-                  >
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-gold text-gold-foreground shadow-gold">
-                      <Upload className="h-6 w-6" />
-                    </div>
+                <div className="relative flex h-full flex-col justify-end p-8">
+                  <p className="text-xs uppercase tracking-[0.35em] text-gold">
+                    Secure Booking
+                  </p>
 
-                    <div className="mt-4 sm:ml-5 sm:mt-0">
-                      <div className="font-display text-2xl">
-                        Upload inspiration image
-                      </div>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        Add a photo from your phone or computer so Rooted Beauty can see the look you want.
-                      </p>
-                      <p className="mt-2 text-xs uppercase tracking-[0.25em] text-gold">
-                        JPG, PNG, or image file
-                      </p>
-                    </div>
-                  </label>
+                  <h1 className="mt-4 font-display text-6xl leading-none">
+                    Book your <span className="text-gradient-glam">seat</span>
+                  </h1>
 
-                  {inspirationFile && (
-                    <div className="mt-4 grid gap-4 rounded-xl border border-gold/30 bg-background/40 p-4 sm:grid-cols-[120px_1fr]">
-                      {inspirationPreview ? (
-                        <img
-                          src={inspirationPreview}
-                          alt="Selected inspiration preview"
-                          className="h-32 w-full rounded-xl object-cover sm:h-28"
-                        />
-                      ) : (
-                        <div className="flex h-28 items-center justify-center rounded-xl border border-border/60 bg-card/40">
-                          <ImagePlus className="h-6 w-6 text-gold" />
-                        </div>
-                      )}
+                  <p className="mt-5 text-muted-foreground">
+                    One focused step at a time. Swipe left or tap continue to move forward.
+                  </p>
 
-                      <div className="flex flex-col justify-center">
-                        <div className="text-xs uppercase tracking-[0.25em] text-gold">
-                          Selected Image
-                        </div>
-                        <div className="mt-1 break-all text-sm text-foreground">
-                          {inspirationFile.name}
-                        </div>
+                  <div className="mt-8 grid gap-3">
+                    <QuickInfo title="Deposit" body="30% deposit authorization through Stripe." />
+                    <QuickInfo title="Approval" body="Owner reviews before accepting the deposit." />
+                    <QuickInfo title="Confirmation" body="Client receives confirmation after approval." />
+                  </div>
+                </div>
+              </aside>
+
+              <section className="p-5 sm:p-8">
+                <div className="mb-8">
+                  <p className="text-xs uppercase tracking-[0.35em] text-gold">
+                    {String(step + 1).padStart(2, "0")} / 05
+                  </p>
+
+                  <h2 className="mt-3 font-display text-5xl leading-none">
+                    {step === 0 && "Choose your service"}
+                    {step === 1 && "Client details"}
+                    {step === 2 && "Date & time"}
+                    {step === 3 && "Hair details"}
+                    {step === 4 && "Review & secure"}
+                  </h2>
+
+                  <p className="mt-4 max-w-2xl text-muted-foreground">
+                    {step === 0 && "Pick the service you want. Pricing and timing are shown before payment."}
+                    {step === 1 && "Add the client information Rooted Beauty will use for confirmation."}
+                    {step === 2 && "Choose your preferred open date and time. Blocked dates are rejected before checkout."}
+                    {step === 3 && "Share hair details so the owner can prepare properly."}
+                    {step === 4 && "Review everything, accept the policy, and open secure Stripe checkout."}
+                  </p>
+                </div>
+
+                {step === 0 && (
+                  <div className="grid max-h-[430px] gap-4 overflow-y-auto pr-1 sm:grid-cols-2">
+                    {services.map((service) => {
+                      const active = form.service === service.id;
+
+                      return (
                         <button
+                          key={service.id}
                           type="button"
-                          onClick={() => setInspirationFile(null)}
-                          className="mt-3 w-fit text-xs uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-gold"
+                          onClick={() => updateField("service", service.id)}
+                          className={[
+                            "rounded-3xl border p-3 text-left transition",
+                            active
+                              ? "border-gold bg-gold/10"
+                              : "border-border/60 bg-background/30 hover:border-gold/50",
+                          ].join(" ")}
                         >
-                          Remove image
+                          <div className="grid grid-cols-[88px_1fr] gap-4">
+                            <img
+                              src={service.image}
+                              alt={service.name}
+                              className="h-24 w-full rounded-2xl object-cover"
+                            />
+
+                            <div>
+                              <p className="text-[10px] uppercase tracking-[0.28em] text-gold">
+                                {service.category}
+                              </p>
+                              <h3 className="mt-1 font-display text-2xl leading-none">
+                                {service.name}
+                              </h3>
+                              <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">
+                                {service.description}
+                              </p>
+
+                              <div className="mt-3 flex items-center justify-between gap-2">
+                                <p className="font-display text-xl text-gold">
+                                  {service.priceLabel}
+                                </p>
+                                <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                                  <Clock3 className="h-3 w-3 text-gold" />
+                                  {service.durationLabel}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
                         </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {step === 1 && (
+                  <div className="grid gap-5">
+                    <Field label="Full name *">
+                      <Input
+                        value={form.name}
+                        onChange={(event) => updateField("name", event.target.value)}
+                        placeholder="Client full name"
+                      />
+                    </Field>
+
+                    <div className="grid gap-5 sm:grid-cols-2">
+                      <Field label="Phone *">
+                        <Input
+                          value={form.phone}
+                          onChange={(event) => updateField("phone", event.target.value)}
+                          placeholder="4706984059"
+                        />
+                      </Field>
+
+                      <Field label="Email *">
+                        <Input
+                          type="email"
+                          value={form.email}
+                          onChange={(event) => updateField("email", event.target.value)}
+                          placeholder="client@email.com"
+                        />
+                      </Field>
+                    </div>
+                  </div>
+                )}
+
+                {step === 2 && (
+                  <div className="grid gap-5">
+                    <div className="rounded-3xl border border-border/60 bg-background/30 p-5">
+                      <p className="text-xs uppercase tracking-[0.28em] text-gold">
+                        Selected Service
+                      </p>
+                      <h3 className="mt-2 font-display text-3xl">
+                        {selectedService?.name ?? "No service selected"}
+                      </h3>
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        {selectedService
+                          ? `${selectedService.priceLabel} • ${selectedService.durationLabel}`
+                          : "Go back and choose a service."}
+                      </p>
+                    </div>
+
+                    <Field label="Style detail">
+                      <Input
+                        value={form.style}
+                        onChange={(event) => updateField("style", event.target.value)}
+                        placeholder="Knotless, mid-back, side part..."
+                      />
+                    </Field>
+
+                    <div className="grid gap-5 sm:grid-cols-2">
+                      <Field label="Preferred date *">
+                        <Input
+                          type="date"
+                          min={minDate}
+                          value={form.preferred_date}
+                          onChange={(event) =>
+                            updateField("preferred_date", event.target.value)
+                          }
+                        />
+                      </Field>
+
+                      <Field label="Preferred time *">
+                        <select
+                          value={form.preferred_time}
+                          onChange={(event) =>
+                            updateField("preferred_time", event.target.value)
+                          }
+                          className="h-11 w-full rounded-xl border border-border/60 bg-background px-3 text-sm text-foreground outline-none"
+                        >
+                          <option value="">Pick a time</option>
+                          {timeOptions.map((time) => (
+                            <option key={time} value={time}>
+                              {time}
+                            </option>
+                          ))}
+                        </select>
+                      </Field>
+                    </div>
+                  </div>
+                )}
+
+                {step === 3 && (
+                  <div className="grid gap-5">
+                    <div className="grid gap-5 sm:grid-cols-2">
+                      <Field label="Hair length">
+                        <select
+                          value={form.hair_length}
+                          onChange={(event) =>
+                            updateField("hair_length", event.target.value)
+                          }
+                          className="h-11 w-full rounded-xl border border-border/60 bg-background px-3 text-sm text-foreground outline-none"
+                        >
+                          <option value="">Choose length</option>
+                          {hairLengths.map((value) => (
+                            <option key={value} value={value}>
+                              {value}
+                            </option>
+                          ))}
+                        </select>
+                      </Field>
+
+                      <Field label="Hair condition">
+                        <select
+                          value={form.hair_condition}
+                          onChange={(event) =>
+                            updateField("hair_condition", event.target.value)
+                          }
+                          className="h-11 w-full rounded-xl border border-border/60 bg-background px-3 text-sm text-foreground outline-none"
+                        >
+                          <option value="">Choose condition</option>
+                          {hairConditions.map((value) => (
+                            <option key={value} value={value}>
+                              {value}
+                            </option>
+                          ))}
+                        </select>
+                      </Field>
+                    </div>
+
+                    <label className="cursor-pointer rounded-3xl border border-dashed border-gold/50 bg-gold/5 p-5 transition hover:bg-gold/10">
+                      <div className="flex items-center gap-4">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gold text-black">
+                          <Upload className="h-5 w-5" />
+                        </div>
+
+                        <div>
+                          <h3 className="font-display text-2xl">
+                            Upload inspiration image
+                          </h3>
+                          <p className="mt-1 text-sm text-muted-foreground">
+                            Add a photo so Rooted Beauty can see the look.
+                          </p>
+                        </div>
+                      </div>
+
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(event) => {
+                          setInspirationFile(event.target.files?.[0] ?? null);
+                        }}
+                      />
+
+                      {inspirationFile && (
+                        <p className="mt-4 rounded-2xl border border-border/60 bg-background/40 px-4 py-3 text-sm">
+                          Selected: {inspirationFile.name}
+                        </p>
+                      )}
+                    </label>
+
+                    <div>
+                      <Label className="mb-3 block text-xs uppercase tracking-[0.25em] text-muted-foreground">
+                        Requested add-ons
+                      </Label>
+
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        {addOnOptions.map((item) => {
+                          const active = form.add_ons.includes(item);
+
+                          return (
+                            <button
+                              key={item}
+                              type="button"
+                              onClick={() => toggleAddOn(item)}
+                              className={[
+                                "rounded-2xl border px-4 py-3 text-sm transition",
+                                active
+                                  ? "border-gold bg-gold/10 text-gold"
+                                  : "border-border/60 bg-background/30 hover:border-gold/40",
+                              ].join(" ")}
+                            >
+                              {item}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
+
+                    <Field label="Notes">
+                      <Textarea
+                        rows={4}
+                        value={form.notes}
+                        onChange={(event) => updateField("notes", event.target.value)}
+                        placeholder="Allergies, scalp sensitivity, special requests..."
+                      />
+                    </Field>
+                  </div>
+                )}
+
+                {step === 4 && (
+                  <div className="grid gap-5">
+                    <div className="rounded-3xl border border-border/60 bg-background/30 p-5">
+                      <p className="text-xs uppercase tracking-[0.28em] text-gold">
+                        Booking Summary
+                      </p>
+
+                      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                        <SummaryItem label="Client" value={form.name || "—"} />
+                        <SummaryItem label="Phone" value={form.phone || "—"} />
+                        <SummaryItem label="Email" value={form.email || "—"} />
+                        <SummaryItem
+                          label="Service"
+                          value={selectedService?.name ?? "—"}
+                        />
+                        <SummaryItem
+                          label="Date"
+                          value={form.preferred_date || "—"}
+                        />
+                        <SummaryItem
+                          label="Time"
+                          value={form.preferred_time || "—"}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="rounded-3xl border border-gold/40 bg-gold/5 p-5">
+                      <div className="flex items-start gap-4">
+                        <div className="rounded-full border border-gold/50 p-3 text-gold">
+                          <LockKeyhole className="h-5 w-5" />
+                        </div>
+
+                        <div>
+                          <h3 className="font-display text-3xl">
+                            Secure booking
+                          </h3>
+
+                          <p className="mt-3 text-sm text-muted-foreground">
+                            A 30% deposit authorization is collected through Stripe.
+                            The owner reviews the request before accepting the deposit
+                            and confirming the appointment.
+                          </p>
+
+                          <div className="mt-5 rounded-2xl border border-border/60 bg-background/40 p-4">
+                            <p className="text-xs uppercase tracking-[0.24em] text-gold">
+                              Deposit authorization
+                            </p>
+
+                            <p className="mt-2 font-display text-5xl">
+                              {depositAmount !== null ? `$${depositAmount}` : "—"}
+                            </p>
+                          </div>
+
+                          <label className="mt-5 flex items-start gap-3 text-sm">
+                            <input
+                              type="checkbox"
+                              checked={form.policyAgreed}
+                              onChange={(event) =>
+                                updateField("policyAgreed", event.target.checked)
+                              }
+                              className="mt-1 h-4 w-4 rounded border-border"
+                            />
+
+                            <span>
+                              I understand the deposit, cancellation, late arrival,
+                              privacy, and appointment prep policy.
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-8 flex items-center justify-between gap-3 border-t border-border/60 pt-5">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={previousStep}
+                    disabled={step === 0}
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back
+                  </Button>
+
+                  <div className="text-center text-xs uppercase tracking-[0.25em] text-muted-foreground">
+                    Swipe or tap
+                  </div>
+
+                  {step < steps.length - 1 ? (
+                    <Button variant="glam" size="lg" onClick={nextStep}>
+                      Continue
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="glam"
+                      size="lg"
+                      onClick={secureBooking}
+                      disabled={submitting}
+                    >
+                      <CreditCard className="h-4 w-4" />
+                      {submitting ? "Opening Stripe..." : "Book & Pay"}
+                    </Button>
                   )}
                 </div>
-              </Field>
-
-              <Field label="Requested add-ons" className="sm:col-span-2">
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {addOnOptions.map((addOn) => {
-                    const active = form.add_ons.includes(addOn);
-
-                    return (
-                      <button
-                        key={addOn}
-                        type="button"
-                        onClick={() => toggleAddOn(addOn)}
-                        className={cn(
-                          "rounded-xl border px-4 py-3 text-left text-sm transition-all duration-300",
-                          active
-                            ? "border-gold bg-gold/10 text-gold shadow-gold"
-                            : "border-border/60 bg-background/30 text-muted-foreground hover:border-gold/50 hover:text-gold",
-                        )}
-                      >
-                        {addOn}
-                      </button>
-                    );
-                  })}
-                </div>
-              </Field>
-
-              <Field label="Notes" className="sm:col-span-2">
-                <Textarea
-                  value={form.notes}
-                  onChange={(e) => update("notes", e.target.value)}
-                  rows={4}
-                  maxLength={800}
-                  placeholder="Allergies, scalp sensitivity, special requests, event details..."
-                />
-              </Field>
+              </section>
             </div>
-
-            <div className="mt-10 rounded-2xl border border-gold/30 bg-background/35 p-5">
-              <div className="flex gap-4">
-                <ShieldCheck className="mt-1 h-5 w-5 shrink-0 text-gold" />
-                <div>
-                  <h3 className="font-display text-2xl">Booking policy</h3>
-                  <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                    <li>• A 30% deposit secures your appointment after approval.</li>
-                    <li>• Free cancellation up to 48 hours before your appointment.</li>
-                    <li>• There is a 15-minute grace period for late arrivals.</li>
-                    <li>• Exact address is provided after confirmation for privacy.</li>
-                    <li>• Arrive detangled unless detangling or take-down is added.</li>
-                  </ul>
-
-                  <label className="mt-5 flex cursor-pointer items-start gap-3 text-sm">
-                    <input
-                      type="checkbox"
-                      checked={form.policyAgreed}
-                      onChange={(e) => update("policyAgreed", e.target.checked)}
-                      className="mt-1 h-4 w-4 rounded border-gold/50 accent-pink"
-                    />
-                    <span className="text-muted-foreground">
-                      I understand the booking, deposit, cancellation, late arrival,
-                      and prep policy.
-                    </span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <Button
-              type="submit"
-              variant="glam"
-              size="xl"
-              className="mt-8 w-full"
-              disabled={submitting}
-            >
-              <Sparkles />
-              {submitting ? "Reserving..." : "Reserve My Seat"}
-            </Button>
-
-            <p className="mt-4 text-center text-xs text-muted-foreground">
-              This request does not guarantee the appointment until Rooted Beauty confirms it.
-            </p>
-          </form>
+          </div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }
 
 function Field({
   label,
-  required,
-  className = "",
   children,
 }: {
   label: string;
-  required?: boolean;
-  className?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className={`flex flex-col gap-2 ${className}`}>
-      <Label className="text-xs uppercase tracking-widest text-muted-foreground">
+    <div>
+      <Label className="mb-2 block text-xs uppercase tracking-[0.25em] text-muted-foreground">
         {label}
-        {required && <span className="ml-1 text-pink">*</span>}
       </Label>
       {children}
     </div>
   );
 }
 
-function Detail({ title, body }: { title: string; body: string }) {
-  return (
-    <div className="border-l-2 border-gold/60 pl-4">
-      <div className="text-xs uppercase tracking-widest text-gold">{title}</div>
-      <div className="text-sm text-muted-foreground">{body}</div>
-    </div>
-  );
-}
-
-function BookingStep({
-  number,
+function QuickInfo({
   title,
-  description,
-  className = "",
+  body,
 }: {
-  number: string;
   title: string;
-  description: string;
-  className?: string;
+  body: string;
 }) {
   return (
-    <div className={cn("flex gap-4", className)}>
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gold/50 bg-background/50 font-display text-lg text-gold">
-        {number}
-      </div>
-      <div>
-        <h2 className="font-display text-3xl">{title}</h2>
-        <p className="mt-1 text-sm text-muted-foreground">{description}</p>
-      </div>
-    </div>
-  );
-}
-
-function SelectedServiceCard({ style }: { style: (typeof styles)[number] | null }) {
-  if (!style) {
-    return (
-      <div className="mt-10 rounded-3xl border border-border/60 bg-card/40 p-6 shadow-luxe">
-        <div className="flex items-center gap-3 text-gold">
-          <Scissors className="h-5 w-5" />
-          <span className="text-xs uppercase tracking-[0.3em]">Selected Service</span>
-        </div>
-        <h2 className="mt-4 font-display text-3xl">Choose your crown</h2>
-        <p className="mt-3 text-sm text-muted-foreground">
-          Pick a service to see price, timing, and booking details before submitting.
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="mt-10 overflow-hidden rounded-3xl border border-gold/30 bg-card/50 shadow-luxe">
-      <img src={style.image} alt={style.name} className="h-64 w-full object-cover" />
-
-      <div className="p-6">
-        <div className="text-xs uppercase tracking-[0.3em] text-gold">
-          Selected Service
-        </div>
-        <h2 className="mt-2 font-display text-3xl">{style.name}</h2>
-        <p className="mt-3 text-sm text-muted-foreground">{style.description}</p>
-
-        <div className="mt-5 grid grid-cols-2 gap-3">
-          <div className="rounded-2xl border border-border/60 bg-background/35 p-4">
-            <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-              Starting At
-            </div>
-            <div className="mt-1 font-display text-2xl text-gradient-gold">
-              {style.price}
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-border/60 bg-background/35 p-4">
-            <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-              Duration
-            </div>
-            <div className="mt-1 flex items-center gap-2 font-display text-2xl">
-              <Clock className="h-4 w-4 text-gold" />
-              {style.duration}
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-5 rounded-2xl border border-gold/30 bg-gold/10 p-4 text-sm text-muted-foreground">
-          A 30% deposit is requested after your appointment is approved and confirmed.
-        </div>
-      </div>
+    <div className="border-l-2 border-gold pl-4">
+      <p className="text-xs uppercase tracking-[0.25em] text-gold">{title}</p>
+      <p className="mt-1 text-sm text-muted-foreground">{body}</p>
     </div>
   );
 }
@@ -828,16 +986,15 @@ function SelectedServiceCard({ style }: { style: (typeof styles)[number] | null 
 function SummaryItem({
   label,
   value,
-  className = "",
 }: {
   label: string;
   value: string;
-  className?: string;
 }) {
   return (
-    <div className={cn("rounded-2xl border border-border/60 bg-background/35 p-4", className)}>
-      <div className="text-[10px] uppercase tracking-[0.25em] text-gold">{label}</div>
-      <div className="mt-1 text-sm text-foreground">{value}</div>
+    <div className="rounded-2xl border border-border/60 bg-card/40 p-4">
+      <p className="text-xs uppercase tracking-[0.24em] text-gold">{label}</p>
+      <p className="mt-2 text-sm text-foreground">{value}</p>
     </div>
   );
 }
+
