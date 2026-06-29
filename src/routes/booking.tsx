@@ -13,7 +13,7 @@ import {
   X,
 } from "lucide-react";
 
-export const Route = createFileRoute("/booking-preview")({
+export const Route = createFileRoute("/booking")({
   component: BookingPreviewPage,
 });
 
