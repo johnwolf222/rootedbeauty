@@ -326,7 +326,8 @@ function Index() {
                 <Link to="/events">Plan Event Glam</Link>
               </Button>
               <Button asChild variant="luxe" size="xl">
-                </Button>
+                <Link to="/booking">Book Appointment</Link>
+              </Button>
               </div>
             </div>
 
@@ -346,7 +347,6 @@ function Index() {
           <p className="mt-12 text-center text-sm uppercase tracking-widest text-muted-foreground">
             Intentionally growing toward 70–85 appointments per month — book early for best availability.
           </p>
-        </div>
       </section>
     </>
   );
